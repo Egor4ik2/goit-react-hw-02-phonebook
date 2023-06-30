@@ -1,52 +1,67 @@
-import React, { useState } from 'react';
-import ContactForm from './ContactForn/ContactForm';
+import React, { Component } from 'react';
+import { nanoid } from 'nanoid';
+import ContactForm from './contactForm/ContactForm';
 import ContactList from './contactList/ContactList';
 import Filter from './filter/Filter';
 import styles from './App.module.css';
 
-export const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [filter, setFilter] = useState('');
+export class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      contacts: [],
+      filter: '',
+    };
+  }
 
-  const addContact = (contact) => {
+  addContact = (contact) => {
+    const { contacts } = this.state;
     const isContactExists = contacts.find(
       (c) => c.name.toLowerCase() === contact.name.toLowerCase() || c.number === contact.number
     );
 
     if (isContactExists) {
-      window.alert('Контакт с таким именем или номером уже существует!');
+      window.alert('Contact with this name or number already exists!');
       return;
     }
 
     const newContact = {
       ...contact,
-      id: Math.random().toString(),
+      id: nanoid(),
     };
 
-    setContacts([...contacts, newContact]);
+    this.setState((prevState) => ({
+      contacts: [...prevState.contacts, newContact],
+    }));
   };
 
-  const deleteContact = (id) => {
-    setContacts(contacts.filter((contact) => contact.id !== id));
+  deleteContact = (id) => {
+    this.setState((prevState) => ({
+      contacts: prevState.contacts.filter((contact) => contact.id !== id),
+    }));
   };
 
-  const handleFilterChange = (value) => {
-    setFilter(value);
+  handleFilterChange = (value) => {
+    this.setState({
+      filter: value,
+    });
   };
 
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  render() {
+    const { contacts, filter } = this.state;
 
-  return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Phonebook</h1>
-      <ContactForm addContact={addContact} />
-      <h2 className={styles.title}>Contacts</h2>
-      <Filter filter={filter} setFilter={handleFilterChange} />
-      <ContactList contacts={filteredContacts} onDelete={deleteContact} />
-    </div>
-  );
-};
+    const filteredContacts = contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
 
-
+    return (
+      <div className={styles.container}>
+        <h1 className={styles.title}>Phonebook</h1>
+        <ContactForm addContact={this.addContact} />
+        <h2 className={styles.title}>Contacts</h2>
+        <Filter filter={filter} setFilter={this.handleFilterChange} />
+        <ContactList contacts={filteredContacts} onDelete={this.deleteContact} />
+      </div>
+    );
+  }
+}

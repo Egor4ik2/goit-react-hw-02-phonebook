@@ -1,21 +1,21 @@
-.contact-form {
+.form {
   display: flex;
   flex-direction: column;
   max-width: 300px;
   margin-bottom: 20px;
 }
 
-.contact-form label {
+.label {
   margin-bottom: 10px;
 }
 
-.contact-form input {
+.input {
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-.contact-form button {
+.button {
   padding: 8px 16px;
   background-color: #4caf50;
   color: white;
@@ -24,6 +24,6 @@
   cursor: pointer;
 }
 
-.contact-form button:hover {
+.button:hover {
   background-color: #45a049;
 }
