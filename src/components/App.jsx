@@ -14,6 +14,19 @@ export class App extends Component {
     };
   }
 
+  componentDidMount() {
+    const storedContacts = localStorage.getItem('contacts');
+    if (storedContacts) {
+      this.setState({ contacts: JSON.parse(storedContacts) });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   addContact = (contact) => {
     const { contacts } = this.state;
     const isContactExists = contacts.find(
@@ -49,11 +62,11 @@ export class App extends Component {
 
   render() {
     const { contacts, filter } = this.state;
-
+  
     const filteredContacts = contacts.filter((contact) =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
-
+  
     return (
       <div className={styles.container}>
         <h1 className={styles.title}>Phonebook</h1>
@@ -64,4 +77,7 @@ export class App extends Component {
       </div>
     );
   }
+  
 }
+
+
